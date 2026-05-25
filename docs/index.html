@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Marine sediment ML — interactive thesis demos</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+    h1 { color: #1a5276; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 1.2rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; }
+    a { color: #2471a3; }
+    code { background: #f4f4f4; padding: 0.1rem 0.3rem; }
+  </style>
+</head>
+<body>
+  <h1>Interactive experiments</h1>
+  <p>Companion demos for the dissertation (TOC / MAR mapping). Data source for this build:
+     <strong>synthetic shelf-to-deep-sea transect</strong>.</p>
+  <ul>
+    <li><a href="exp6_cart_split.html"><strong>Experiment 6</strong></a><br/><span>1D CART split: threshold $t$ and variance reduction $\Delta$ (Eq. 1.1)</span></li>
+    <li><a href="exp1_3d_surfaces.html"><strong>Experiment 1</strong></a><br/><span>3D RF vs MLP surfaces (rotate with mouse)</span></li>
+    <li><a href="exp2_zoom_maps.html"><strong>Experiment 2</strong></a><br/><span>Zoomable RF vs MLP maps</span></li>
+    <li><a href="exp3_knn_slider.html"><strong>Experiment 3</strong></a><br/><span>k-NN bandwidth slider</span></li>
+    <li><a href="exp4_rf_depth_slider.html"><strong>Experiment 4</strong></a><br/><span>Random forest max_depth slider on 2D grid</span></li>
+    <li><a href="exp4b_rf_trees_slider.html"><strong>Experiment 4b</strong></a><br/><span>Random forest n_estimators slider</span></li>
+    <li><a href="exp5_mlp_slider.html"><strong>Experiment 5</strong></a><br/><span>MLP hidden layers and activation slider</span></li>
+  </ul>
+  <p>To use your Baltic CSV, copy <code>data_config.example.json</code> to <code>data_config.json</code>,
+     set <code>csv_path</code>, and run <code>python build_experiments.py</code> again.</p>
+</body>
+</html>
