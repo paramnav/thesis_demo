@@ -3,30 +3,35 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Marine sediment ML — interactive thesis demos</title>
+  <title>Machine Learning for Marine Sediments - Thesis Interactive Demos</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
-    h1 { color: #1a5276; }
+    body { font-family: "Times New Roman", Times, serif; max-width: 800px; margin: 3rem auto; padding: 0 1rem; line-height: 1.6; color: #333; }
+    h1 { color: #1a5276; font-weight: normal; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; }
     ul { list-style: none; padding: 0; }
-    li { margin: 1.2rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; }
-    a { color: #2471a3; }
-    code { background: #f4f4f4; padding: 0.1rem 0.3rem; }
+    li { margin: 1.2rem 0; padding: 1.2rem; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: box-shadow 0.2s; }
+    li:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    a { color: #2471a3; text-decoration: none; font-size: 1.1rem; }
+    a:hover { text-decoration: underline; }
+    code { background: #f4f4f4; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: "Courier New", Courier, monospace; }
   </style>
 </head>
 <body>
-  <h1>Interactive experiments</h1>
-  <p>Companion demos for the dissertation (TOC / MAR mapping). Data source for this build:
+  <h1>Interactive Experiments</h1>
+  <p>Companion interactive visualizations for the dissertation on mapping Total Organic Carbon (TOC) and Mass Accumulation Rates (MAR). Data source for this build:
      <strong>synthetic shelf-to-deep-sea transect</strong>.</p>
   <ul>
-    <li><a href="exp6_cart_split.html"><strong>Experiment 6</strong></a><br/><span>1D CART split: threshold $t$ and variance reduction $\Delta$ (Eq. 1.1)</span></li>
-    <li><a href="exp1_3d_surfaces.html"><strong>Experiment 1</strong></a><br/><span>3D RF vs MLP surfaces (rotate with mouse)</span></li>
-    <li><a href="exp2_zoom_maps.html"><strong>Experiment 2</strong></a><br/><span>Zoomable RF vs MLP maps</span></li>
-    <li><a href="exp3_knn_slider.html"><strong>Experiment 3</strong></a><br/><span>k-NN bandwidth slider</span></li>
-    <li><a href="exp4_rf_depth_slider.html"><strong>Experiment 4</strong></a><br/><span>Random forest max_depth slider on 2D grid</span></li>
-    <li><a href="exp4b_rf_trees_slider.html"><strong>Experiment 4b</strong></a><br/><span>Random forest n_estimators slider</span></li>
-    <li><a href="exp5_mlp_slider.html"><strong>Experiment 5</strong></a><br/><span>MLP hidden layers and activation slider</span></li>
+    <li><a href="exp1_combined.html"><strong>Experiment 1</strong></a><br/><span style="color:#555;">3D surfaces + 2D maps — RF, MLP (PyTorch), and k-NN combined with outlier drop targets</span></li>
+    <li><a href="exp2_knn_slider.html"><strong>Experiment 2</strong></a><br/><span style="color:#555;">k-NN scaling dynamics & extrapolation dilemma — toggle hidden validation points</span></li>
+    <li><a href="exp3_combined_rf.html"><strong>Experiment 3</strong></a><br/><span style="color:#555;">Random forest structural evolution — 5-stage complexity narrative slider</span></li>
+    <li><a href="exp4_combined_mlp.html"><strong>Experiment 4</strong></a><br/><span style="color:#555;">MLP projection surface constraints — architecture & activation progression</span></li>
+    <li><a href="exp5_information_gain.html"><strong>Experiment 5</strong></a><br/><span style="color:#555;">Information gain — target scale, relative uncertainty, and constant uncertainty</span></li>
+    <li><a href="exp6_loss_slider.html"><strong>Experiment 6</strong></a><br/><span style="color:#555;">MSE / MAE / Huber loss slider — outlier sensitivity in 1D MLP</span></li>
+    <li><a href="exp7_activation_slider.html"><strong>Experiment 7</strong></a><br/><span style="color:#555;">ReLU / tanh / logistic activation slider (1D extrapolation)</span></li>
+    <li><a href="exp8_covariate_shift_ptr_ptg.html"><strong>Experiment 8</strong></a><br/><span style="color:#555;">Covariate-shift marginals p_tr vs p_tg (with train/test point toggles)</span></li>
+    <li><a href="exp9_mlp_training_lab.html"><strong>Experiment 9</strong></a><br/><span style="color:#555;">MLP training lab with neuron activations and TOC/loss</span></li>
+    <li><a href="exp10_multi_task_learning.html"><strong>Experiment 10</strong></a><br/><span style="color:#555;">Multi-task learning (MTL) vs Single-task with two targets (Regularization effect)</span></li>
   </ul>
-  <p>To use your Baltic CSV, copy <code>data_config.example.json</code> to <code>data_config.json</code>,
+  <p style="font-size: 0.9em; margin-top: 3rem; color: #666;">To use your Baltic CSV, copy <code>data_config.example.json</code> to <code>data_config.json</code>,
      set <code>csv_path</code>, and run <code>python build_experiments.py</code> again.</p>
 </body>
 </html>

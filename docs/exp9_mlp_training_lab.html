@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Experiment 10: MLP training lab (BN, dropout, weight decay)</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #fff;
+      --ink: #263238;
+      --muted: #607d8b;
+      --accent: #1a5276;
+      --good: #1e8449;
+      --warn: #d35400;
+      --off: #cfd8dc;
+      --line: #e3e9ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 1rem 1.1rem 2rem;
+      background: linear-gradient(180deg, #f7f9fb 0%, #eef3f7 100%);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    .back a { color: var(--accent); text-decoration: none; }
+    .back a:hover { text-decoration: underline; }
+    h1 { font-weight: 650; font-size: 1.3rem; margin: 0.4rem 0 0.25rem; }
+    .sub { color: var(--muted); font-size: 0.92rem; margin-bottom: 0.9rem; max-width: 78ch; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 0.9rem;
+    }
+    @media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 0.95rem 1rem;
+      border: 1px solid var(--line);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+    }
+    .card h2 { font-size: 0.98rem; margin: 0 0 0.7rem; color: var(--accent); }
+    label.row {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin: 0.4rem 0;
+      font-size: 0.9rem;
+    }
+    label.row input[type="range"] { flex: 1; }
+    .tog {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.45rem;
+      margin: 0.45rem 0 0.65rem;
+    }
+    @media (max-width: 620px) { .tog { grid-template-columns: 1fr; } }
+    .tog label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+      user-select: none;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.42rem 0.65rem;
+    }
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.45rem 0.82rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      margin-right: 0.35rem;
+      margin-top: 0.3rem;
+    }
+    button:hover { filter: brightness(1.08); }
+    button.secondary { background: #5d6d7e; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+    }
+    .metric {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.45rem 0.55rem;
+      text-align: center;
+      font-size: 0.78rem;
+    }
+    .metric b { display: block; font-size: 1rem; color: var(--accent); margin-top: 0.1rem; }
+    .pred-big {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--good);
+      text-align: center;
+      margin: 0.45rem 0 0.1rem;
+    }
+    .mini-note {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+      text-align: center;
+    }
+    .scatter-wrap { height: 235px; position: relative; margin-top: 0.65rem; }
+    canvas { width: 100%; height: 100%; }
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin: 0.7rem 0 0.35rem;
+      flex-wrap: wrap;
+    }
+    .flow span.active { color: var(--good); font-weight: 700; }
+    .neurons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.45rem;
+      margin-top: 0.55rem;
+    }
+    @media (max-width: 620px) { .neurons { grid-template-columns: repeat(2, 1fr); } }
+    .neuron {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.42rem;
+      font-size: 0.72rem;
+      text-align: center;
+      background: #fff;
+    }
+    .neuron.off { opacity: 0.38; background: #fafbfc; }
+    .bar-wrap {
+      height: 44px;
+      background: #edf3f7;
+      border-radius: 6px;
+      margin: 0.28rem 0 0.3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .bar {
+      position: absolute;
+      bottom: 0;
+      left: 12%;
+      width: 76%;
+      background: linear-gradient(to top, #2471a3, #5dade2);
+      border-radius: 4px 4px 0 0;
+      transition: height 0.18s;
+    }
+    .bar.zero { background: var(--off); height: 2px !important; }
+    .legend {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.45rem;
+      border-top: 1px solid var(--line);
+      padding-top: 0.45rem;
+    }
+  </style>
+</head>
+<body>
+  <p class="back"><a href="index.html">&larr; All experiments</a></p>
+  <h1>Experiment 10: MLP training lab</h1>
+  <p class="sub">
+    Compact training lab for a small MLP. Use the toggles to compare regularized and unregularized behavior, then move the sliders to see how the prediction, hidden units, and loss respond.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Inputs &amp; target</h2>
+      <label class="row">Depth (shallow &larr; &rarr; deep)
+        <input type="range" id="depth" min="0" max="1" step="0.01" value="0.25"/>
+        <span id="depthVal">0.25</span>
+      </label>
+      <label class="row">Productivity
+        <input type="range" id="prod" min="0" max="1" step="0.01" value="0.85"/>
+        <span id="prodVal">0.85</span>
+      </label>
+      <label class="row"><b>True TOC at this point</b> (wt.%)
+        <input type="range" id="trueY" min="0" max="10" step="0.05" value="3.2"/>
+        <span id="trueYVal">3.20</span>
+      </label>
+      <div class="pred-big">Predicted: <span id="predY">—</span> wt.%</div>
+      <div class="mini-note">Red = query target, green = model prediction</div>
+      <div class="metrics">
+        <div class="metric">MSE at your point<br/><b id="mseQuery">—</b></div>
+        <div class="metric">MSE (mini-batch)<br/><b id="mseBatch">—</b></div>
+        <div class="metric">Weight penalty<br/><b id="wdTerm">—</b></div>
+        <div class="metric">Total loss<br/><b id="totalLoss">—</b></div>
+      </div>
+      <div class="scatter-wrap"><canvas id="scatter"></canvas></div>
+      <p class="legend">Black dots: batch cores. Dashed red: target you set. Green: current model prediction.</p>
+    </div>
+
+    <div class="card">
+      <h2>Regularization</h2>
+      <div class="tog">
+        <label><input type="checkbox" id="useWD" checked/> Weight decay (&lambda;)</label>
+        <label><input type="checkbox" id="useBN" checked/> Batch normalization</label>
+        <label><input type="checkbox" id="useDO" checked/> Dropout (p=0.35)</label>
+      </div>
+      <label class="row">&lambda; (weight decay)
+        <input type="range" id="lambdaWD" min="0" max="0.5" step="0.01" value="0.08"/>
+        <span id="lambdaVal">0.08</span>
+      </label>
+      <button type="button" id="resampleDO" class="secondary">Resample dropout mask</button>
+      <button type="button" id="resampleBatch" class="secondary">Shuffle mini-batch</button>
+      <div class="legend" style="border-top:0; padding-top:0; margin-top:0.6rem;">
+        Batch norm stabilizes hidden activations across the current mini-batch. Dropout removes units during a pass. Weight decay shrinks overly large weights.
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1rem;">
+    <h2>Hidden layer (4 units)</h2>
+    <div class="flow">
+      <span id="stPre">pre-activation u</span> &rarr;
+      <span id="stBN">BN</span> &rarr;
+      <span>ReLU</span> &rarr;
+      <span id="stDO">dropout</span> &rarr;
+      <span>output TOC</span>
+    </div>
+    <div class="neurons" id="neuronPanel"></div>
+  </div>
+
+<script>
+(function () {
+  const H = 4;
+  const trainPts = [
+    { x: [0.1, 0.9], y: 4.8 },
+    { x: [0.2, 0.85], y: 4.2 },
+    { x: [0.35, 0.7], y: 3.0 },
+    { x: [0.55, 0.45], y: 1.6 },
+    { x: [0.75, 0.25], y: 0.7 },
+    { x: [0.9, 0.15], y: 0.35 },
+  ];
+
+  // Fixed weights (2 -> 4 -> 1), hand-tuned for shelf-high / deep-low TOC
+  const W1 = [
+    [-2.2, 1.8, -0.5, 0.3],
+    [2.5, -1.2, 1.1, -0.8],
+  ];
+  const b1 = [0.4, -0.2, 0.1, -0.3];
+  const W2 = [[1.4], [1.1], [0.9], [-0.6]];
+  const b2 = [0.15];
+  const gamma = [1.2, 1.0, 0.9, 1.1];
+  const beta = [0.05, -0.05, 0.0, 0.02];
+
+  let dropoutMask = [1, 1, 0, 1];
+  let batchIdx = trainPts.map((_, i) => i);
+
+  function relu(v) { return Math.max(0, v); }
+  function dot(a, b) {
+    let s = 0;
+    for (let i = 0; i < a.length; i++) s += a[i] * b[i];
+    return s;
+  }
+
+  function forwardPoint(x, opts) {
+    const u = [];
+    for (let j = 0; j < H; j++) {
+      let s = b1[j];
+      for (let i = 0; i < 2; i++) s += W1[i][j] * x[i];
+      u.push(s);
+    }
+    return { u };
+  }
+
+  function batchStats() {
+    const pre = batchIdx.map(i => forwardPoint(trainPts[i].x, {}).u);
+    const mu = [], sig = [];
+    for (let j = 0; j < H; j++) {
+      const col = pre.map(row => row[j]);
+      const m = col.reduce((a, b) => a + b, 0) / col.length;
+      const v = col.reduce((a, b) => a + (b - m) ** 2, 0) / col.length;
+      mu.push(m);
+      sig.push(Math.sqrt(v + 1e-5));
+    }
+    return { mu, sig, pre };
+  }
+
+  function applyBN(u, mu, sig, useBN) {
+    if (!useBN) return u.slice();
+    return u.map((v, j) => gamma[j] * (v - mu[j]) / sig[j] + beta[j]);
+  }
+
+  function finishForward(h, useDO, pDrop) {
+    const hDrop = h.map((v, j) => {
+      if (!useDO) return v;
+      return dropoutMask[j] ? v / (1 - pDrop) : 0;
+    });
+    let y = b2[0];
+    for (let j = 0; j < H; j++) y += W2[j][0] * hDrop[j];
+    return { h, hDrop, y: Math.max(0, y) };
+  }
+
+  function weightNormSq() {
+    let s = 0;
+    W1.forEach(row => row.forEach(w => { s += w * w; }));
+    b1.forEach(w => { s += w * w; });
+    W2.forEach(row => row.forEach(w => { s += w * w; }));
+    b2.forEach(w => { s += w * w; });
+    return s;
+  }
+
+  function predictQuery(x, useBN, useDO, pDrop) {
+    const { mu, sig } = batchStats();
+    const { u } = forwardPoint(x, {});
+    const bn = applyBN(u, mu, sig, useBN);
+    const h = bn.map(relu);
+    return finishForward(h, useDO, pDrop);
+  }
+
+  function mseBatch(useBN, useDO, pDrop) {
+    let s = 0;
+    batchIdx.forEach(i => {
+      const p = predictQuery(trainPts[i].x, useBN, useDO, pDrop).y;
+      s += (trainPts[i].y - p) ** 2;
+    });
+    return s / batchIdx.length;
+  }
+
+  const els = {
+    depth: document.getElementById('depth'),
+    prod: document.getElementById('prod'),
+    trueY: document.getElementById('trueY'),
+    useWD: document.getElementById('useWD'),
+    useBN: document.getElementById('useBN'),
+    useDO: document.getElementById('useDO'),
+    lambdaWD: document.getElementById('lambdaWD'),
+    neuronPanel: document.getElementById('neuronPanel'),
+    scatter: document.getElementById('scatter'),
+  };
+
+  function buildNeuronPanel() {
+    els.neuronPanel.innerHTML = '';
+    for (let j = 0; j < H; j++) {
+      const d = document.createElement('div');
+      d.className = 'neuron';
+      d.id = 'neuron' + j;
+      d.innerHTML = `
+        <div>Unit ${j + 1}</div>
+        <div class="bar-wrap"><div class="bar" id="bar${j}"></div></div>
+        <div id="txt${j}">u=—</div>`;
+      els.neuronPanel.appendChild(d);
+    }
+  }
+  buildNeuronPanel();
+
+  function drawScatter(qx, qy, pred) {
+    const c = els.scatter;
+    const ctx = c.getContext('2d');
+    const w = c.clientWidth, h = c.clientHeight;
+    c.width = w; c.height = h;
+    const pad = 36;
+    const xMin = 0, xMax = 1, yMin = 0, yMax = 10;
+    const X = v => pad + (v - xMin) / (xMax - xMin) * (w - 2 * pad);
+    const Y = v => h - pad - (v - yMin) / (yMax - yMin) * (h - 2 * pad);
+
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = '#ddd';
+    ctx.beginPath();
+    ctx.moveTo(pad, pad);
+    ctx.lineTo(pad, h - pad);
+    ctx.lineTo(w - pad, h - pad);
+    ctx.stroke();
+
+    ctx.fillStyle = '#333';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('Depth →', w / 2 - 20, h - 8);
+    ctx.save();
+    ctx.translate(12, h / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('TOC (wt.%)', 0, 0);
+    ctx.restore();
+
+    batchIdx.forEach(i => {
+      const p = trainPts[i];
+      ctx.fillStyle = '#222';
+      ctx.beginPath();
+      ctx.arc(X(p.x[0]), Y(p.y), 5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.strokeStyle = '#c0392b';
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(X(qx[0]), Y(qy));
+    ctx.lineTo(X(qx[0]), Y(0));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#c0392b';
+    ctx.beginPath();
+    ctx.arc(X(qx[0]), Y(qy), 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#27ae60';
+    ctx.beginPath();
+    ctx.arc(X(qx[0]), Y(pred), 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = '10px sans-serif';
+    ctx.fillStyle = '#27ae60';
+    ctx.fillText('pred', X(qx[0]) + 8, Y(pred) - 4);
+  }
+
+  function update() {
+    const x = [+els.depth.value, +els.prod.value];
+    const trueY = +els.trueY.value;
+    const useBN = els.useBN.checked;
+    const useDO = els.useDO.checked;
+    const useWD = els.useWD.checked;
+    const lam = +els.lambdaWD.value;
+    const pDrop = 0.35;
+
+    document.getElementById('depthVal').textContent = x[0].toFixed(2);
+    document.getElementById('prodVal').textContent = x[1].toFixed(2);
+    document.getElementById('trueYVal').textContent = trueY.toFixed(2);
+
+    const { mu, sig } = batchStats();
+    const { u } = forwardPoint(x, {});
+    const bn = applyBN(u, mu, sig, useBN);
+    const h = bn.map(relu);
+    const out = finishForward(h, useDO, pDrop);
+
+    document.getElementById('predY').textContent = out.y.toFixed(2);
+    const mseQ = (trueY - out.y) ** 2;
+    const mse = mseBatch(useBN, useDO, pDrop);
+    const wd = useWD ? 0.5 * lam * weightNormSq() : 0;
+    const total = mse + wd;
+    document.getElementById('mseQuery').textContent = mseQ.toFixed(3);
+    document.getElementById('mseBatch').textContent = mse.toFixed(3);
+    document.getElementById('wdTerm').textContent = wd.toFixed(3);
+    document.getElementById('totalLoss').textContent = total.toFixed(3);
+    document.getElementById('lambdaVal').textContent = lam.toFixed(2);
+
+    document.getElementById('stBN').className = useBN ? 'active' : '';
+    document.getElementById('stDO').className = useDO ? 'active' : '';
+
+    const maxH = 5.0;
+    for (let j = 0; j < H; j++) {
+      const node = document.getElementById('neuron' + j);
+      const bar = document.getElementById('bar' + j);
+      const txt = document.getElementById('txt' + j);
+      const active = !useDO || dropoutMask[j];
+      node.classList.toggle('off', useDO && !dropoutMask[j]);
+      const ht = active ? (h[j] / maxH) * 100 : 0;
+      bar.style.height = ht + '%';
+      bar.classList.toggle('zero', h[j] <= 0.001);
+      txt.textContent = `u=${u[j].toFixed(2)} → h=${h[j].toFixed(2)}`;
+    }
+
+    drawScatter(x, trueY, out.y);
+  }
+
+  function resampleDropout() {
+    dropoutMask = Array.from({ length: H }, () => (Math.random() > 0.35 ? 1 : 0));
+    if (dropoutMask.every(z => z === 0)) dropoutMask[0] = 1;
+    update();
+  }
+
+  ['input', 'change'].forEach(ev => {
+    [els.depth, els.prod, els.trueY, els.useWD, els.useBN, els.useDO, els.lambdaWD].forEach(el => {
+      el.addEventListener(ev, update);
+    });
+  });
+  document.getElementById('resampleDO').addEventListener('click', resampleDropout);
+  document.getElementById('resampleBatch').addEventListener('click', () => {
+    for (let i = batchIdx.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [batchIdx[i], batchIdx[j]] = [batchIdx[j], batchIdx[i]];
+    }
+    update();
+  });
+
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+</body>
+</html>
