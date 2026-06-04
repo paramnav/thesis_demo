@@ -24,23 +24,22 @@ QR_DIR = ROOT / "qr"
 DOCS = ROOT / "docs"
 
 # (QR stem in LaTeX, HTML file under docs/, margin caption)
-# Keep stems (qr_exp3, qr_exp10, …) stable for kap_01.tex; update paths when demos are renamed.
 EXPERIMENTS = [
     ("qr_index", "index.html", "All interactive thesis demos."),
     ("qr_exp6", "exp6_cart_split.html",
      r"Slide CART split threshold $t$; watch variance reduction $\Delta$."),
-    ("qr_exp1", "exp1_combined.html",
-     "Combined RF / MLP / $k$-NN surfaces and maps."),
-    ("qr_exp2", "exp2_knn_slider.html",
-     "Zoomable comparison maps on a shelf transect."),
-    ("qr_exp3", "exp1a_knn.html",
-     r"Standalone $k$-NN experiment (1a); vary $k$."),
-    ("qr_exp4", "exp1a_rf.html",
-     r"Standalone RF experiment (1a); tune \texttt{max\_depth}."),
-    ("qr_exp4b", "exp1a_rf.html",
-     r"Standalone RF experiment (1a); tune \texttt{n\_estimators}."),
-    ("qr_exp5", "exp1a_mlp.html",
-     "Standalone MLP experiment (1a) with architecture controls."),
+    ("qr_exp1a_rf", "exp1a_rf.html",
+     r"RF on shelf transect: tune \texttt{max\_depth} and \texttt{n\_estimators}."),
+    ("qr_exp1a_knn", "exp1a_knn.html",
+     r"$k$-NN on shelf transect: vary neighbourhood size $k$."),
+    ("qr_exp1a_mlp", "exp1a_mlp.html",
+     "MLP on shelf transect: architecture, BN, dropout, loss, batch size."),
+    ("qr_exp2_knn", "exp2_knn.html",
+     r"1D extrapolation: $k$-NN bandwidth (Figure~\ref{fig:extrapolation_failure})."),
+    ("qr_exp2_rf", "exp2_rf.html",
+     r"1D extrapolation: random forest depth and trees."),
+    ("qr_exp2_mlp", "exp2_mlp.html",
+     "1D extrapolation: MLP architecture and regularization."),
     ("qr_exp7", "exp6_loss_slider.html",
      "MSE vs MAE vs Huber with outliers (1D MLP)."),
     ("qr_exp8", "exp7_activation_slider.html",
@@ -51,11 +50,14 @@ EXPERIMENTS = [
      r"Toggle BN, dropout, weight decay; neuron activations and TOC loss."),
 ]
 
-# Legacy filenames still printed in older QR batches — keep redirects in docs/.
 LEGACY_REDIRECTS = {
     "exp10_mlp_training_lab.html": "exp9_mlp_training_lab.html",
     "exp9_covariate_shift_ptr_ptg.html": "exp8_covariate_shift_ptr_ptg.html",
-    "exp9_mlp_training_lab.html": "exp9_mlp_training_lab.html",  # identity ok
+    "exp9_mlp_training_lab.html": "exp9_mlp_training_lab.html",
+    "exp2_knn_slider.html": "exp2_knn.html",
+    "exp1_combined.html": "exp1a_rf.html",
+    "exp1a_combined.html": "exp1a_rf.html",
+    "exp3_combined_rf.html": "exp1a_rf.html",
 }
 
 
@@ -112,7 +114,6 @@ def write_legacy_redirects() -> None:
             continue
         out = DOCS / old_name
         if out.exists() and "Redirecting" not in out.read_text(encoding="utf-8", errors="ignore")[:200]:
-            # Do not overwrite real demos that happen to share a legacy name.
             continue
         out.write_text(template.format(target=new_name), encoding="utf-8")
         print("redirect", out.name, "->", new_name)

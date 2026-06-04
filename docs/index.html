@@ -20,15 +20,14 @@
   <p>Companion interactive visualizations for the dissertation on mapping Total Organic Carbon (TOC) and Mass Accumulation Rates (MAR). Data source for this build:
      <strong>synthetic shelf-to-deep-sea transect</strong>.</p>
   <ul>
-    <li><a href="exp1_combined.html"><strong>Experiment 1</strong></a><br/><span style="color:#555;">3D surfaces + 2D maps — RF, MLP (PyTorch), and k-NN combined with outlier drop targets</span></li>
-    <li><a href="exp1a_rf.html"><strong>Experiment 1a-RF</strong></a><br/><span style="color:#555;">Random forest only — max_depth & n_estimators dropdowns, outlier scenarios, 3D + 2D</span></li>
-    <li><a href="exp1a_knn.html"><strong>Experiment 1a-kNN</strong></a><br/><span style="color:#555;">k-NN only — k dropdown, outlier scenarios, 3D + 2D maps</span></li>
-    <li><a href="exp1a_mlp.html"><strong>Experiment 1a-MLP</strong></a><br/><span style="color:#555;">MLP only — layers, architecture, BN, dropout, loss, batch size dropdowns</span></li>
-    <li><a href="exp1a_combined.html"><strong>Experiment 1a (combined)</strong></a><br/><span style="color:#555;">RF + MLP + k-NN side-by-side with all dropdown controls and outlier scenarios</span></li>
-    <li><a href="exp2_knn_slider.html"><strong>Experiment 2</strong></a><br/><span style="color:#555;">k-NN scaling dynamics & extrapolation dilemma — toggle hidden validation points</span></li>
-    <li><a href="exp3_combined_rf.html"><strong>Experiment 3</strong></a><br/><span style="color:#555;">Random forest structural evolution — 5-stage complexity narrative slider</span></li>
-    <li><a href="exp4_combined_mlp.html"><strong>Experiment 4</strong></a><br/><span style="color:#555;">MLP projection surface constraints — architecture & activation progression</span></li>
+    <li><a href="exp1a_rf.html"><strong>Experiment 1 — Random forest</strong></a><br/><span style="color:#555;">max_depth & n_estimators dropdowns, outlier scenarios, 3D + 2D maps</span></li>
+    <li><a href="exp1a_knn.html"><strong>Experiment 1 — $k$-NN</strong></a><br/><span style="color:#555;">$k$ dropdown, outlier scenarios, 3D + 2D maps</span></li>
+    <li><a href="exp1a_mlp.html"><strong>Experiment 1 — MLP</strong></a><br/><span style="color:#555;">Layers, architecture, BN, dropout, loss, batch size dropdowns</span></li>
+    <li><a href="exp2_knn.html"><strong>Experiment 2 — $k$-NN (1D)</strong></a><br/><span style="color:#555;">Neighbourhood size dropdown; extrapolation zone (Figure extrapolation_failure)</span></li>
+    <li><a href="exp2_rf.html"><strong>Experiment 2 — Random forest (1D)</strong></a><br/><span style="color:#555;">max_depth & n_estimators dropdown; label-range bound offshore</span></li>
+    <li><a href="exp2_mlp.html"><strong>Experiment 2 — MLP (1D)</strong></a><br/><span style="color:#555;">Architecture dropdown; ReLU continuation beyond training support</span></li>
     <li><a href="exp5_information_gain.html"><strong>Experiment 5</strong></a><br/><span style="color:#555;">Synthetic map + clustered cores — KL information gain (TOC vs MAR, fixed vs relative σ_ref)</span></li>
+    <li><a href="exp11_information_gain_reference.html"><strong>Experiment 11</strong></a><br/><span style="color:#555;">Fixed σ_ref = 0.05 vs relative 10%/30% — target range 0–5 vs 0–500 (same transect)</span></li>
     <li><a href="exp6_loss_slider.html"><strong>Experiment 6</strong></a><br/><span style="color:#555;">MSE / MAE / Huber loss slider — outlier sensitivity in 1D MLP</span></li>
     <li><a href="exp7_activation_slider.html"><strong>Experiment 7</strong></a><br/><span style="color:#555;">ReLU / tanh / logistic activation slider (1D extrapolation)</span></li>
     <li><a href="exp8_covariate_shift_ptr_ptg.html"><strong>Experiment 8</strong></a><br/><span style="color:#555;">Covariate-shift marginals p_tr vs p_tg (with train/test point toggles)</span></li>
