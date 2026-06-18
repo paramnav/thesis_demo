@@ -13,19 +13,31 @@
     a { color: #2471a3; text-decoration: none; font-size: 1.1rem; }
     a:hover { text-decoration: underline; }
     code { background: #f4f4f4; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: "Courier New", Courier, monospace; }
+    .desc { color: #555; }
+    mjx-container[jax="CHTML"] { font-size: 100% !important; }
   </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        processEscapes: true,
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
   <h1>Interactive Experiments</h1>
   <p>Companion interactive visualizations for the dissertation on mapping Total Organic Carbon (TOC) and Mass Accumulation Rates (MAR).</p>
   <ul>
 
-    <li><a href="exp6_cart_split.html"><strong>CART split threshold</strong></a><br/><span style="color:#555;">1D regression tree: slide threshold $t$; watch variance reduction $\Delta$ (Eq. 1.24)</span></li>
-    <li><a href="exp1a_rf.html"><strong>Experiment 1a — Random forest</strong></a><br/><span style="color:#555;">max_depth & n_estimators dropdowns, outlier scenarios, 3D + 2D maps; toggle to 1D extrapolation</span></li>
-    <li><a href="exp1a_knn.html"><strong>Experiment 1b — $k$-NN</strong></a><br/><span style="color:#555;">$k$ dropdown, outlier scenarios, 3D + 2D maps; toggle to 1D extrapolation</span></li>
-    <li><a href="exp1a_mlp.html"><strong>Experiment 1c — MLP</strong></a><br/><span style="color:#555;">Layers, architecture, BN, dropout, loss, batch size dropdowns; toggle to 1D extrapolation</span></li>
-    <li><a href="exp4_information_gain.html"><strong>Information gain</strong></a><br/><span style="color:#555;">Experiment 1 MLP + MC dropout σ_MC; prior IG map; toggle hypothetical new cores for surprise</span></li>
-    <li><a href="exp12_shapley_values.html"><strong>Shapley values</strong></a><br/><span style="color:#555;">Experiment 1 transect: spatial φ₁/φ₂ maps, click or slide to inspect Eq. 1.35 decomposition</span></li>
+    <li><a href="exp6_cart_split.html"><strong>CART split threshold</strong></a><br/><span class="desc">1D regression tree: slide threshold \(t\); watch variance reduction \(\Delta\) (Eq. 1.24)</span></li>
+    <li><a href="exp1a_rf.html"><strong>Experiment 1a — Random forest</strong></a><br/><span class="desc">max_depth & n_estimators dropdowns, outlier scenarios, 3D + 2D maps; toggle to 1D extrapolation</span></li>
+    <li><a href="exp1a_knn.html"><strong>Experiment 1b — \(k\)-NN</strong></a><br/><span class="desc">\(k\) dropdown, outlier scenarios, 3D + 2D maps; toggle to 1D extrapolation</span></li>
+    <li><a href="exp1a_mlp.html"><strong>Experiment 1c — MLP</strong></a><br/><span class="desc">Layers, architecture, BN, dropout, loss, batch size dropdowns; toggle to 1D extrapolation</span></li>
+    <li><a href="exp4_information_gain.html"><strong>Information gain</strong></a><br/><span class="desc">Experiment 1 MLP + MC dropout \(\sigma_{\mathrm{MC}}\); prior IG map; toggle hypothetical new cores for surprise</span></li>
+    <li><a href="exp12_shapley_values.html"><strong>Shapley values</strong></a><br/><span class="desc">Experiment 1 transect: spatial \(\phi_1\)/\(\phi_2\) maps, click or slide to inspect Eq. 1.35 decomposition</span></li>
   </ul>
 </body>
 </html>
