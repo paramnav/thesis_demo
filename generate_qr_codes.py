@@ -34,10 +34,10 @@ EXPERIMENTS = [
      r"Experiment 1b — $k$-NN shelf transect; toggle to 1D extrapolation."),
     ("qr_exp1a_mlp", "exp1a_mlp.html",
      r"Experiment 1c — MLP shelf transect; toggle to 1D extrapolation."),
-    ("qr_exp_ig", "exp5_information_gain.html",
-     r"Information gain map (Exp.~5); toggle to $\sigma_{\mathrm{ref}}$ pedagogy (Exp.~11)."),
+    ("qr_exp_ig", "exp4_information_gain.html",
+     r"Information gain map; toggle to $\sigma_{\mathrm{ref}}$ pedagogy."),
     ("qr_exp12_shap", "exp12_shapley_values.html",
-     r"2-feature Shapley toy: coalitions, $\phi_i$, and $f(x)=\mathbb{E}[f]+\sum_i\phi_i$ (Eq.~\ref{eq:shapdecomp})."),
+     r"Spatial Shapley maps on the Experiment 1 transect: $\phi_1$, $\phi_2$, and $f(x)=\mathbb{E}[f]+\sum_i\phi_i$ (Eq.~\ref{eq:shapdecomp})."),
 ]
 
 LEGACY_REDIRECTS = {
@@ -46,7 +46,9 @@ LEGACY_REDIRECTS = {
     "exp8_covariate_shift_ptr_ptg.html": "index.html",
     "exp9_mlp_training_lab.html": "index.html",
     "exp10_multi_task_learning.html": "index.html",
-    "exp12_information_gain_pedagogy.html": "exp5_information_gain.html",
+    "exp12_information_gain_pedagogy.html": "exp4_information_gain.html",
+    "exp5_information_gain.html": "exp4_information_gain.html",
+    "exp11_information_gain_reference.html": "information_gain_sigma_ref.html",
     "exp2_knn_slider.html": "exp2_knn.html",
     "exp1_combined.html": "exp1a_rf.html",
     "exp1a_combined.html": "exp1a_rf.html",
