@@ -21,23 +21,12 @@
      <strong>synthetic shelf-to-deep-sea transect</strong>.</p>
   <ul>
 
-    <li style="background:#f0f7fc;border-color:#aed6f1;">
-      <a href="guide.html"><strong>How to read these experiments</strong></a><br/>
-      <span style="color:#555;">Extrapolation analysis for RF, $k$-NN, and MLP — links to thesis Figures extrapolation_failure and patchiness, probe tables, and demo reading guide.</span>
-    </li>
-    <li><a href="exp1a_rf.html"><strong>Experiment 1 — Random forest</strong></a><br/><span style="color:#555;">max_depth & n_estimators dropdowns, outlier scenarios, 3D + 2D maps</span></li>
-    <li><a href="exp1a_knn.html"><strong>Experiment 1 — $k$-NN</strong></a><br/><span style="color:#555;">$k$ dropdown, outlier scenarios, 3D + 2D maps</span></li>
-    <li><a href="exp1a_mlp.html"><strong>Experiment 1 — MLP</strong></a><br/><span style="color:#555;">Layers, architecture, BN, dropout, loss, batch size dropdowns</span></li>
-    <li><a href="exp2_knn.html"><strong>Experiment 2 — $k$-NN (1D)</strong></a><br/><span style="color:#555;">Neighbourhood size dropdown; extrapolation zone (Figure extrapolation_failure)</span></li>
-    <li><a href="exp2_rf.html"><strong>Experiment 2 — Random forest (1D)</strong></a><br/><span style="color:#555;">max_depth & n_estimators dropdown; label-range bound offshore</span></li>
-    <li><a href="exp2_mlp.html"><strong>Experiment 2 — MLP (1D)</strong></a><br/><span style="color:#555;">Architecture dropdown; ReLU continuation beyond training support</span></li>
-    <li><a href="exp5_information_gain.html"><strong>Experiment 5</strong></a><br/><span style="color:#555;">Synthetic map + clustered cores — KL information gain (TOC vs MAR, fixed vs relative σ_ref)</span></li>
-    <li><a href="exp11_information_gain_reference.html"><strong>Experiment 11</strong></a><br/><span style="color:#555;">Fixed σ_ref = 0.05 vs relative 10%/30% — target range 0–5 vs 0–500 (same transect)</span></li>
-    <li><a href="exp6_loss_slider.html"><strong>Experiment 6</strong></a><br/><span style="color:#555;">MSE / MAE / Huber loss slider — outlier sensitivity in 1D MLP</span></li>
-    <li><a href="exp7_activation_slider.html"><strong>Experiment 7</strong></a><br/><span style="color:#555;">ReLU / tanh / logistic activation slider (1D extrapolation)</span></li>
-    <li><a href="exp8_covariate_shift_ptr_ptg.html"><strong>Experiment 8</strong></a><br/><span style="color:#555;">Covariate-shift marginals p_tr vs p_tg (with train/test point toggles)</span></li>
-    <li><a href="exp9_mlp_training_lab.html"><strong>Experiment 9</strong></a><br/><span style="color:#555;">MLP training lab with neuron activations and TOC/loss</span></li>
-    <li><a href="exp10_multi_task_learning.html"><strong>Experiment 10</strong></a><br/><span style="color:#555;">Multi-task learning (MTL) vs Single-task with two targets (Regularization effect)</span></li>
+    <li><a href="exp6_cart_split.html"><strong>CART split threshold</strong></a><br/><span style="color:#555;">1D regression tree: slide threshold $t$; watch variance reduction $\Delta$ (Eq. 1.24)</span></li>
+    <li><a href="exp1a_rf.html"><strong>Experiment 1a — Random forest</strong></a><br/><span style="color:#555;">max_depth & n_estimators dropdowns, outlier scenarios, 3D + 2D maps; toggle to 1D extrapolation</span></li>
+    <li><a href="exp1a_knn.html"><strong>Experiment 1b — $k$-NN</strong></a><br/><span style="color:#555;">$k$ dropdown, outlier scenarios, 3D + 2D maps; toggle to 1D extrapolation</span></li>
+    <li><a href="exp1a_mlp.html"><strong>Experiment 1c — MLP</strong></a><br/><span style="color:#555;">Layers, architecture, BN, dropout, loss, batch size dropdowns; toggle to 1D extrapolation</span></li>
+    <li><a href="exp5_information_gain.html"><strong>Information gain</strong></a><br/><span style="color:#555;">Synthetic map + clustered cores — KL information gain (TOC vs MAR); toggle to σ_ref pedagogy</span></li>
+    <li><a href="exp12_shapley_values.html"><strong>Shapley values</strong></a><br/><span style="color:#555;">2-feature TOC toy model: coalitions, marginal contributions, additive decomposition (Eq. 1.35)</span></li>
   </ul>
   <p style="font-size: 0.9em; margin-top: 3rem; color: #666;">To use your Baltic CSV, copy <code>data_config.example.json</code> to <code>data_config.json</code>,
      set <code>csv_path</code>, and run <code>python build_experiments.py</code> again.</p>

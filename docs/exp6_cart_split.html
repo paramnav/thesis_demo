@@ -49,11 +49,16 @@
 </head>
 <body>
 
+
+<div class="exp-guide-bar" style="font-family:'Times New Roman',serif;max-width:1600px;margin:0.5rem auto;padding:0.55rem 1rem;background:#f0f7fc;border:1px solid #aed6f1;border-radius:6px;font-size:14px;line-height:1.5;">
+  <a href="index.html" style="color:#2471a3;">← All interactive experiments</a>
+</div>
+
 <p class="back"><a href="index.html">&larr; All experiments</a></p>
 
 <div class="container">
     <h2>1D Regression Tree Split Simulator</h2>
-    <p style="color: #666;">Adjust the threshold ($t$) using the slider to find the split that maximizes variance reduction (&Delta;), matching the CART objective in the thesis.</p>
+    <p style="color: #666;">Adjust the threshold ($t$) using the slider to find the split that maximizes variance reduction (&Delta;), matching the CART objective $\Delta = \mathrm{Var}(S) - [\lambda\,\mathrm{Var}(S_L) + (1-\lambda)\,\mathrm{Var}(S_R)]$ with $\lambda = |S_L|/|S|$ in the thesis.</p>
 
     <div style="position: relative; height:400px; width:100%">
         <canvas id="treeChart"></canvas>
@@ -137,7 +142,8 @@ function updateSplit(t) {
     const cR = nR > 0 ? rightNode.reduce((sum, p) => sum + p.y, 0) / nR : 0;
     const varL = nL > 0 ? leftNode.reduce((sum, p) => sum + Math.pow(p.y - cL, 2), 0) / nL : 0;
     const varR = nR > 0 ? rightNode.reduce((sum, p) => sum + Math.pow(p.y - cR, 2), 0) / nR : 0;
-    const delta = globalVariance - ((nL / N) * varL) - ((nR / N) * varR);
+    const lambda = nL / N;
+    const delta = globalVariance - (lambda * varL + (1 - lambda) * varR);
 
     document.getElementById('valCL').innerText = cL.toFixed(2);
     document.getElementById('valCR').innerText = cR.toFixed(2);

@@ -18,6 +18,7 @@ import argparse
 from pathlib import Path
 
 import qrcode
+from qrcode.constants import ERROR_CORRECT_H
 
 ROOT = Path(__file__).resolve().parent
 QR_DIR = ROOT / "qr"
@@ -25,35 +26,27 @@ DOCS = ROOT / "docs"
 
 # (QR stem in LaTeX, HTML file under docs/, margin caption)
 EXPERIMENTS = [
-    ("qr_index", "index.html", "All interactive thesis demos."),
     ("qr_exp6", "exp6_cart_split.html",
      r"Slide CART split threshold $t$; watch variance reduction $\Delta$."),
     ("qr_exp1a_rf", "exp1a_rf.html",
-     r"RF on shelf transect: tune \texttt{max\_depth} and \texttt{n\_estimators}."),
+     r"Experiment 1a — RF shelf transect; toggle to 1D extrapolation."),
     ("qr_exp1a_knn", "exp1a_knn.html",
-     r"$k$-NN on shelf transect: vary neighbourhood size $k$."),
+     r"Experiment 1b — $k$-NN shelf transect; toggle to 1D extrapolation."),
     ("qr_exp1a_mlp", "exp1a_mlp.html",
-     "MLP on shelf transect: architecture, BN, dropout, loss, batch size."),
-    ("qr_exp2_knn", "exp2_knn.html",
-     r"1D extrapolation: $k$-NN bandwidth (Figure~\ref{fig:extrapolation_failure})."),
-    ("qr_exp2_rf", "exp2_rf.html",
-     r"1D extrapolation: random forest depth and trees."),
-    ("qr_exp2_mlp", "exp2_mlp.html",
-     "1D extrapolation: MLP architecture and regularization."),
-    ("qr_exp7", "exp6_loss_slider.html",
-     "MSE vs MAE vs Huber with outliers (1D MLP)."),
-    ("qr_exp8", "exp7_activation_slider.html",
-     r"ReLU vs tanh vs logistic beyond training support."),
-    ("qr_exp9", "exp8_covariate_shift_ptr_ptg.html",
-     r"Covariate-shift marginals $p_{\mathrm{tr}}$ vs.\ $p_{\mathrm{tg}}$."),
-    ("qr_exp10", "exp9_mlp_training_lab.html",
-     r"Toggle BN, dropout, weight decay; neuron activations and TOC loss."),
+     r"Experiment 1c — MLP shelf transect; toggle to 1D extrapolation."),
+    ("qr_exp_ig", "exp5_information_gain.html",
+     r"Information gain map (Exp.~5); toggle to $\sigma_{\mathrm{ref}}$ pedagogy (Exp.~11)."),
+    ("qr_exp12_shap", "exp12_shapley_values.html",
+     r"2-feature Shapley toy: coalitions, $\phi_i$, and $f(x)=\mathbb{E}[f]+\sum_i\phi_i$ (Eq.~\ref{eq:shapdecomp})."),
 ]
 
 LEGACY_REDIRECTS = {
-    "exp10_mlp_training_lab.html": "exp9_mlp_training_lab.html",
-    "exp9_covariate_shift_ptr_ptg.html": "exp8_covariate_shift_ptr_ptg.html",
-    "exp9_mlp_training_lab.html": "exp9_mlp_training_lab.html",
+    "exp10_mlp_training_lab.html": "index.html",
+    "exp9_covariate_shift_ptr_ptg.html": "index.html",
+    "exp8_covariate_shift_ptr_ptg.html": "index.html",
+    "exp9_mlp_training_lab.html": "index.html",
+    "exp10_multi_task_learning.html": "index.html",
+    "exp12_information_gain_pedagogy.html": "exp5_information_gain.html",
     "exp2_knn_slider.html": "exp2_knn.html",
     "exp1_combined.html": "exp1a_rf.html",
     "exp1a_combined.html": "exp1a_rf.html",
@@ -61,10 +54,12 @@ LEGACY_REDIRECTS = {
 }
 
 
-def make_qr(url: str, out: Path, box_size: int = 8, border: int = 2) -> None:
-    img = qrcode.make(url, box_size=box_size, border=border)
+def make_qr(url: str, out: Path, box_size: int = 10, border: int = 2) -> None:
+    qr = qrcode.QRCode(error_correction=ERROR_CORRECT_H, box_size=box_size, border=border)
+    qr.add_data(url)
+    qr.make(fit=True)
     out.parent.mkdir(parents=True, exist_ok=True)
-    img.save(out)
+    qr.make_image().save(out)
     print(out)
 
 
