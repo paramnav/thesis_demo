@@ -20,40 +20,27 @@ from pathlib import Path
 import qrcode
 from qrcode.constants import ERROR_CORRECT_H
 
+from demo_urls import EXP1, EXP2, EXP3, EXP4, EXP5, EXP6, LEGACY_REDIRECTS
+
 ROOT = Path(__file__).resolve().parent
 QR_DIR = ROOT / "qr"
 DOCS = ROOT / "docs"
 
 # (QR stem in LaTeX, HTML file under docs/, margin caption)
 EXPERIMENTS = [
-    ("qr_exp6", "exp6_cart_split.html",
-     r"Slide CART split threshold $t$; watch variance reduction $\Delta$."),
-    ("qr_exp1a_rf", "exp1a_rf.html",
-     r"Experiment 1a — RF shelf transect; toggle to 1D extrapolation."),
-    ("qr_exp1a_knn", "exp1a_knn.html",
-     r"Experiment 1b — $k$-NN shelf transect; toggle to 1D extrapolation."),
-    ("qr_exp1a_mlp", "exp1a_mlp.html",
-     r"Experiment 1c — MLP shelf transect; toggle to 1D extrapolation."),
-    ("qr_exp_ig", "exp4_information_gain.html",
-     r"Information gain map; toggle to $\sigma_{\mathrm{ref}}$ pedagogy."),
-    ("qr_exp12_shap", "exp12_shapley_values.html",
-     r"Spatial Shapley maps on the Experiment 1 transect: $\phi_1$, $\phi_2$, and $f(x)=\mathbb{E}[f]+\sum_i\phi_i$ (Eq.~\ref{eq:shapdecomp})."),
+    ("qr_exp1", EXP1,
+     r"Experiment 1 — slide CART split threshold $t$; watch variance reduction $\Delta$."),
+    ("qr_exp2", EXP2,
+     r"Experiment 2 — RF shelf transect; toggle to 1D extrapolation."),
+    ("qr_exp3", EXP3,
+     r"Experiment 3 — $k$-NN shelf transect; toggle to 1D extrapolation."),
+    ("qr_exp4", EXP4,
+     r"Experiment 4 — MLP shelf transect; toggle to 1D extrapolation."),
+    ("qr_exp5", EXP5,
+     r"Experiment 5 — information gain map; toggle to $\sigma_{\mathrm{ref}}$ pedagogy."),
+    ("qr_exp6", EXP6,
+     r"Experiment 6 — spatial Shapley maps: $\phi_1$, $\phi_2$, and Eq.~\ref{eq:shapdecomp}."),
 ]
-
-LEGACY_REDIRECTS = {
-    "exp10_mlp_training_lab.html": "index.html",
-    "exp9_covariate_shift_ptr_ptg.html": "index.html",
-    "exp8_covariate_shift_ptr_ptg.html": "index.html",
-    "exp9_mlp_training_lab.html": "index.html",
-    "exp10_multi_task_learning.html": "index.html",
-    "exp12_information_gain_pedagogy.html": "exp4_information_gain.html",
-    "exp5_information_gain.html": "exp4_information_gain.html",
-    "exp11_information_gain_reference.html": "information_gain_sigma_ref.html",
-    "exp2_knn_slider.html": "exp2_knn.html",
-    "exp1_combined.html": "exp1a_rf.html",
-    "exp1a_combined.html": "exp1a_rf.html",
-    "exp3_combined_rf.html": "exp1a_rf.html",
-}
 
 
 def make_qr(url: str, out: Path, box_size: int = 10, border: int = 2) -> None:
@@ -110,8 +97,6 @@ def write_legacy_redirects() -> None:
         if old_name == new_name:
             continue
         out = DOCS / old_name
-        if out.exists() and "Redirecting" not in out.read_text(encoding="utf-8", errors="ignore")[:200]:
-            continue
         out.write_text(template.format(target=new_name), encoding="utf-8")
         print("redirect", out.name, "->", new_name)
 
